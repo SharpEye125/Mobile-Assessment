@@ -22,20 +22,20 @@ public class BetterJumping : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     private void FixedUpdate()
     {
-        if (rb.velocity.y < 0)
+        if (rb.velocity.y < 1)
         {
             rb.gravityScale = fallMultiplier;
         }
-        else if (rb.velocity.y > 0 && !Input.GetButton("Jump"))
-        {
-            rb.gravityScale = lowJumpMultiplier;
-        }
-        else
+        //else if (rb.velocity.y > 0 && !Input.GetButton("Jump"))
+        //{
+        //rb.gravityScale = lowJumpMultiplier;
+        //}
+        else if (rb.velocity.y <= 0 && rb.velocity.x <= 0)
         {
             rb.gravityScale = originalGravity;
         }

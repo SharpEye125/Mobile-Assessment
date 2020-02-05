@@ -20,7 +20,7 @@ public class EnemyPatrol : MonoBehaviour
     {
         transform.Translate(Vector2.right * speed * Time.deltaTime);
         RaycastHit2D groundInfo = Physics2D.Raycast(groundDetection.position, Vector2.down, raycastLength);
-        if (groundInfo.collider == false)
+        if (groundInfo.collider == false && groundInfo.collider.tag != "Player")
         {
             //Debug.Log("Edge hit" + transform.name);
             if (movingRight == true)

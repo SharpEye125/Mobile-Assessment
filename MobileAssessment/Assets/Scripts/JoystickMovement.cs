@@ -2,15 +2,19 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MobilePlatMove : MonoBehaviour
+public class JoystickMovement : MonoBehaviour
 {
+    public Joystick joystick;
+    public float xJoystickSensitivity = 0.2f;
+    public float yJoystickSensitivity = 0.5f;
+
     public float moveSpeed = 1.0f;
     public float jumpSpeed = 1.0f;
     bool grounded = false;
     public int jumpCount = 0;
     public int maxJumps = 2;
     Animator anim;
-    public float moveX = 0;
+    float moveX = 0;
     Rigidbody2D rb;
 
     void Start()
@@ -23,20 +27,59 @@ public class MobilePlatMove : MonoBehaviour
     {
         //float moveX = Input.GetAxis("Horizontal");
         Vector2 velocity = GetComponent<Rigidbody2D>().velocity;
-        velocity.x = moveX  * moveSpeed;
+
+        if (joystick.Horizontal >= xJoystickSensitivity)
+        {
+            //velocity.x = moveSpeed;
+            moveX = 1;
+        }
+        else if (joystick.Horizontal <= -xJoystickSensitivity)
+        {
+            //velocity.x = -moveSpeed;
+            moveX = -1;
+        }
+        else
+        {
+            //velocity.x = 0;
+            moveX = 0;
+        }
+
+        float verticalMove = joystick.Vertical;
+
+        //velocity.x = joystick.Horizontal  * moveSpeed;
+        velocity.x = moveX * moveSpeed;
+
         GetComponent<Rigidbody2D>().velocity = velocity;
-        if(Input.GetButtonDown("Jump") && jumpCount < maxJumps)//&& grounded)
+        if (Input.GetButtonDown("Jump") && jumpCount < maxJumps || verticalMove >= yJoystickSensitivity) //|| joystick.Vertical > 0)//&& grounded)
         {
             Jump();
             jumpCount++;
         }
         float x = Input.GetAxisRaw("Horizontal");
-        anim.SetFloat("x", velocity.x);
-        anim.SetFloat("y", velocity.y);
-        if (moveX > 0)
+        if(x == 0)
+        {
+            anim.SetInteger("x", 0);
+        }
+        else
+        {
+            anim.SetInteger("x", 1);
+        }
+        if(velocity.y > 0)
+        {
+            anim.SetInteger("y", 1);
+        }
+        else if (velocity.y < 0)
+        {
+            anim.SetInteger("y", -1);
+        }
+        else
+        {
+            anim.SetInteger("y", 0);
+        }
+        if(x > 0)
         {
             GetComponent<SpriteRenderer>().flipX = false;
-        }else if (moveX < 0)
+        }else if (x < 0)
         {
             GetComponent<SpriteRenderer>().flipX = true;
         }
