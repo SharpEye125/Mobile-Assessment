@@ -42,8 +42,8 @@ public class JumpMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Vector2 velocity = GetComponent<Rigidbody2D>().velocity;
-        //velocity.x = joystick.Horizontal * moveSpeed;
+        Vector2 velocity = GetComponent<Rigidbody2D>().velocity;
+        velocity.x = joystick.Horizontal * moveSpeed;
 
 
         if (rb.velocity.y < maxFallSpeed)
@@ -97,7 +97,7 @@ public class JumpMovement : MonoBehaviour
     public void Jump()
     {
         chargingJump = false;
-        if (grounded && jumpCount < maxJumps)
+        if (jumpCount < maxJumps || grounded == true)
         {
             rb.velocity = new Vector2(0f, 0);
             GetComponent<Rigidbody2D>().AddForce(new Vector2(0, 100 * jumpHeight));
@@ -119,6 +119,8 @@ public class JumpMovement : MonoBehaviour
         movingRight = false;
         movingLeft = false;
     }
+
+
     void Temp()
     {
         if (joystick.Horizontal >= xJoystickSensitivity && grounded == false)
