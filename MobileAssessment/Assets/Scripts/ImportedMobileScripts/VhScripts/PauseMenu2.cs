@@ -4,9 +4,12 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 public class PauseMenu2 : MonoBehaviour
 {
+    int level;
     // Start is called before the first frame update
     void Start()
     {
+        Time.timeScale = 1;
+        level = SceneManager.GetActiveScene().buildIndex;
         GetComponent<Canvas>().enabled = false;
     }
 
@@ -29,6 +32,7 @@ public class PauseMenu2 : MonoBehaviour
     }
     public void LoadMainMenu()
     {
+        PlayerPrefs.SetInt("lastLevel", level);
         SceneManager.LoadScene("Main Menu");
     }
     public void Resume()
@@ -43,6 +47,7 @@ public class PauseMenu2 : MonoBehaviour
     }
     public void QuitGame()
     {
+        PlayerPrefs.SetInt("lastLevel", level);
         Application.Quit();
     }
     public void OpenOrCloseMenu()

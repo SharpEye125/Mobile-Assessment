@@ -42,9 +42,28 @@ public class JumpMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Vector2 velocity = GetComponent<Rigidbody2D>().velocity;
-        velocity.x = joystick.Horizontal * moveSpeed;
-
+        //Vector2 velocity = GetComponent<Rigidbody2D>().velocity;
+        //velocity.x = joystick.Horizontal * moveSpeed;
+        if (joystick.Horizontal >= xJoystickSensitivity && grounded == false)
+        {
+            Vector2 velocity = GetComponent<Rigidbody2D>().velocity;
+            velocity.x += moveSpeed;
+            if (velocity.x > maxSpeed)
+            {
+                velocity.x = maxSpeed;
+            }
+            GetComponent<Rigidbody2D>().velocity = velocity;
+        }
+        else if (joystick.Horizontal <= -xJoystickSensitivity && grounded == false)
+        {
+            Vector2 velocity = GetComponent<Rigidbody2D>().velocity;
+            velocity.x += -moveSpeed;
+            if (velocity.x < -maxSpeed)
+            {
+                velocity.x = -maxSpeed;
+            }
+            GetComponent<Rigidbody2D>().velocity = velocity;
+        }
 
         if (rb.velocity.y < maxFallSpeed)
         {
@@ -57,6 +76,7 @@ public class JumpMovement : MonoBehaviour
         if (chargingJump == true)
         {
             jumpHeight += Time.deltaTime *chargeSpeed;
+            anim.SetFloat("JumpHeight", jumpHeight);
             //jumpHeight += chargeSpeed;
         }
     }
@@ -92,11 +112,13 @@ public class JumpMovement : MonoBehaviour
     public void ChargeJump()
     {
         chargingJump = true;
-        
+        anim.SetBool("ChargingJump", chargingJump);
     }
     public void Jump()
     {
         chargingJump = false;
+        anim.SetBool("ChargingJump", chargingJump);
+        anim.SetTrigger("Jump");
         if (jumpCount < maxJumps || grounded == true)
         {
             rb.velocity = new Vector2(0f, 0);
@@ -104,6 +126,7 @@ public class JumpMovement : MonoBehaviour
             jumpCount++;
         }
         jumpHeight = 0;
+        anim.SetFloat("JumpHeight", jumpHeight);
     }
 
     public void MoveRight()
